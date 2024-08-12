@@ -13,8 +13,8 @@ abstract class PaymentGateway implements PaymentGatewayInterface, MakeInterface
 
     protected Response $response;
 
-    public function getResponse(): ?object
+    public function getResponse(): Response
     {
-        return $this->response->object();
+        return $this->response;
     }
 }
