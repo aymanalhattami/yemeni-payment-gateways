@@ -79,11 +79,23 @@ class Floosak extends PaymentGateway
      */
     public function requestKey(): static
     {
-        $this->response = Http::withHeaders($this->getHeaders())
-            ->post($this->getBaseUrl() . "api/v1/request/key", [
-                'phone' => $this->getPhone(),
-                'short_code' => $this->getShortCode()
-            ]);
+        try {
+            $this->response = Http::withHeaders($this->getHeaders())
+                ->post($this->getBaseUrl() . "api/v1/request/key", [
+                    'phone' => $this->getPhone(),
+                    'short_code' => $this->getShortCode(),
+                ]);
+
+            // Optional: You might want to handle the response here, like logging or processing it.
+            if ($this->response->successful()) {
+                $this->requestId = $this->response->object()->request_id;
+            } else {
+
+            }
+        } catch (\Exception $e) {
+            // Handle the exception, log error, or throw a custom exception
+            throw new RuntimeException(__CLASS__ . '::' . __FUNCTION__  . $e->getMessage());
+        }
 
         return $this;
     }
@@ -95,9 +107,9 @@ class Floosak extends PaymentGateway
     {
         try {
             $this->response = Http::withHeaders($this->getHeaders())
-                ->post($this->getBaseUrl() . "api/v1/request/ke", [
-                    'phone' => $this->getPhone(),
-                    'short_code' => $this->getShortCode(),
+                ->post($this->getBaseUrl() . "api/v1/verify/key", [
+                    'otp' => $this->getOtp(),
+                    'request_id' => $this->getRequestId()
                 ]);
 
             // Optional: You might want to handle the response here, like logging or processing it.
