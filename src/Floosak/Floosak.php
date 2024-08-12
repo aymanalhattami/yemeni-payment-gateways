@@ -6,6 +6,7 @@ use Aymanalhattami\YemeniPaymentGateways\PaymentGateway;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
+use RuntimeException;
 
 class Floosak extends PaymentGateway
 {
@@ -45,7 +46,7 @@ class Floosak extends PaymentGateway
         return $this->otp;
     }
 
-    public function otp(int|string $otp): static
+    public function setOtp(int|string $otp): static
     {
         $this->otp = $otp;
 
@@ -57,7 +58,7 @@ class Floosak extends PaymentGateway
         return $this->requestId;
     }
 
-    public function requestId(int|string $requestId): static
+    public function setRequestId(int|string $requestId): static
     {
         $this->requestId = $requestId;
 
@@ -92,10 +93,51 @@ class Floosak extends PaymentGateway
      */
     public function verifyKey(): static
     {
+        try {
+            $this->response = Http::withHeaders($this->getHeaders())
+                ->post($this->getBaseUrl() . "api/v1/request/ke", [
+                    'phone' => $this->getPhone(),
+                    'short_code' => $this->getShortCode(),
+                ]);
+
+            // Optional: You might want to handle the response here, like logging or processing it.
+            if ($this->response->successful()) {
+                $this->requestId = $this->response->object()->request_id;
+            } else {
+
+            }
+        } catch (\Exception $e) {
+            // Handle the exception, log error, or throw a custom exception
+            throw new RuntimeException(__CLASS__ . '::' . __FUNCTION__  . $e->getMessage());
+        }
+
+        return $this;
+    }
+
+    /**
+     * @throws ConnectionException
+     */
+    public function requestAndVerifyKey(): static
+    {
+        $requestId = $this->requestKey()->getResponse()->object()->request_id;
+        $this
+            ->setRequestId($this->getRequestId())
+            ->setOtp($this->getOtp())
+            ->verifyKey();
+
+        return $this;
+    }
+
+    /**
+     * @throws ConnectionException
+     */
+    public function pay(float|int $amount): static
+    {
         $this->response = Http::withHeaders($this->getHeaders())
-            ->post($this->getBaseUrl() . "api/v1/verify/key", [
-                'otp' => $this->getOtp(),
-                'request_id' => $this->getRequestId()
+            ->post($this->getBaseUrl() . "api/v1/wallet/pay", [
+                'amount' => $amount,
+                'wallet_id' => $this->getWalletId(),
+                'key' => $this->getKey()
             ]);
 
         return $this;
