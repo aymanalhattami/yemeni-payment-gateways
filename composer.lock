@@ -60,7 +60,7 @@
             ],
             "support": {
                 "issues": "https://github.com/aymanalhattami/toolbox/issues",
-                "source": "https://github.com/aymanalhattami/toolbox/tree/main"
+                "source": "https://github.com/aymanalhattami/toolbox/tree/1.0.1"
             },
             "time": "2024-08-12T07:36:49+00:00"
         },
@@ -6454,16 +6454,16 @@
         },
         {
             "name": "orchestra/workbench",
-            "version": "v9.4.0",
+            "version": "v9.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/orchestral/workbench.git",
-                "reference": "9f6c33c8cc932a176b5f60bc000628e837f75886"
+                "reference": "c4d4cb6e17fdd16af250cabfe82906641eefa9c7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/orchestral/workbench/zipball/9f6c33c8cc932a176b5f60bc000628e837f75886",
-                "reference": "9f6c33c8cc932a176b5f60bc000628e837f75886",
+                "url": "https://api.github.com/repos/orchestral/workbench/zipball/c4d4cb6e17fdd16af250cabfe82906641eefa9c7",
+                "reference": "c4d4cb6e17fdd16af250cabfe82906641eefa9c7",
                 "shasum": ""
             },
             "require": {
@@ -6514,9 +6514,9 @@
             ],
             "support": {
                 "issues": "https://github.com/orchestral/workbench/issues",
-                "source": "https://github.com/orchestral/workbench/tree/v9.4.0"
+                "source": "https://github.com/orchestral/workbench/tree/v9.4.1"
             },
-            "time": "2024-08-10T04:48:17+00:00"
+            "time": "2024-08-12T09:49:20+00:00"
         },
         {
             "name": "phar-io/manifest",
