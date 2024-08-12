@@ -21,7 +21,7 @@ class YemeniPaymentGatewaysServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../config/config.php' => config_path('yemeni-payment-gateways.php'),
+                __DIR__ . '/../config/yemeni-payment-gateways.php' => config_path('yemeni-payment-gateways.php'),
             ], 'config');
 
             // Publishing the views.
@@ -50,7 +50,7 @@ class YemeniPaymentGatewaysServiceProvider extends ServiceProvider
     public function register()
     {
         // Automatically apply the package configuration
-        $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'yemeni-payment-gateways');
+        $this->mergeConfigFrom(__DIR__ . '/../config/yemeni-payment-gateways.php', 'yemeni-payment-gateways');
 
         // Register the main class to use with the facade
         $this->app->singleton('yemeni-payment-gateways', function () {

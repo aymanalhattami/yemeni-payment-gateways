@@ -4,8 +4,66 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "eaf983afbf57b2b99ba8798e4c0c2b2f",
+    "content-hash": "889a54426ffdb2d282f867438581f6f5",
     "packages": [
+        {
+            "name": "aymanalhattami/toolbox",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aymanalhattami/toolbox.git",
+                "reference": "9b377fb4aceceee71138793307fbb59e30ac3fa3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aymanalhattami/toolbox/zipball/9b377fb4aceceee71138793307fbb59e30ac3fa3",
+                "reference": "9b377fb4aceceee71138793307fbb59e30ac3fa3",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/framework": "^10.0|^11.0",
+                "php": "^8.1|^8.2|^8.3"
+            },
+            "default-branch": true,
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Aymanalhattami\\Toolbox\\ToolboxServiceProvider"
+                    ],
+                    "aliases": {
+                        "Toolbox": "Aymanalhattami\\Toolbox\\ToolboxFacade"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Aymanalhattami\\Toolbox\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ayman Alhattami",
+                    "email": "ayman.m.alhattami@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A set of classes",
+            "homepage": "https://github.com/aymanalhattami/toolbox",
+            "keywords": [
+                "Toolbox",
+                "aymanalhattami"
+            ],
+            "support": {
+                "issues": "https://github.com/aymanalhattami/toolbox/issues",
+                "source": "https://github.com/aymanalhattami/toolbox/tree/main"
+            },
+            "time": "2024-08-12T07:36:49+00:00"
+        },
         {
             "name": "brick/math",
             "version": "0.12.1",
@@ -9007,11 +9065,13 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "aymanalhattami/toolbox": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "^8.2"
+        "php": "^8.0"
     },
     "platform-dev": [],
     "plugin-api-version": "2.3.0"
