@@ -3,10 +3,7 @@
 namespace Aymanalhattami\YemeniPaymentGateways\Floosak;
 
 use Aymanalhattami\YemeniPaymentGateways\PaymentGateway;
-use Illuminate\Http\Client\ConnectionException;
-use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
-use MongoDB\Driver\Exception\ConnectionTimeoutException;
 use RuntimeException;
 
 class Floosak extends PaymentGateway
@@ -63,6 +60,10 @@ class Floosak extends PaymentGateway
 
     public function getRequestId(): int|string
     {
+        if(is_null($this->requestId)) {
+            $this->requestId = time() . rand(1000, 9999);
+        }
+
         return $this->requestId;
     }
 
@@ -81,13 +82,6 @@ class Floosak extends PaymentGateway
     public function setVerifyRequestId(int|string $verifyRequestId): static
     {
         $this->verifyRequestId = $verifyRequestId;
-        return $this;
-    }
-
-    private function generateRequestId(): static
-    {
-        $this->requestId = time() . rand(1000, 9999);
-
         return $this;
     }
 
@@ -206,9 +200,10 @@ class Floosak extends PaymentGateway
                 ->withToken($this->getKey())
                 ->post($this->getBaseUrl() . "api/v1/merchant/p2mcl", [
                     'amount' => $this->getAmount(),
-                    'wallet_id' => $this->getWalletId(),
+                    'source_wallet_id' => $this->getWalletId(),
                     'target_phone' => $this->getTargetPhone(),
                     'purpose' => $this->getPurpose(),
+                    'request_id' => $this->getRequestId(),
                 ]);
 
             if ($this->response->failed()) {
@@ -266,7 +261,7 @@ class Floosak extends PaymentGateway
                 ->post($this->getBaseUrl() . "api/v1/merchant/p2mcl/refund", [
                     'transaction_id' => $this->getTransactionId(),
                     'amount' => $this->getAmount(),
-                    'request_id' => $this->generateRequestId()
+                    'request_id' => $this->getRequestId()
                 ]);
 
             if ($this->response->failed()) {
