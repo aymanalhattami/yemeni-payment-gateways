@@ -6,6 +6,7 @@ use Aymanalhattami\YemeniPaymentGateways\PaymentGateway;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
+use MongoDB\Driver\Exception\ConnectionTimeoutException;
 use RuntimeException;
 
 class Floosak extends PaymentGateway
@@ -13,6 +14,13 @@ class Floosak extends PaymentGateway
     private string|int $otp;
 
     private string|int $requestId;
+    private string|int $verifyRequestId;
+
+    private float $amount;
+    private string $clientPhone;
+    private string $purpose;
+    private string|int $purchaseId;
+    private string|int $transactionId;
 
     private function getBaseUrl(): string
     {
@@ -65,6 +73,79 @@ class Floosak extends PaymentGateway
         return $this;
     }
 
+    public function getVerifyRequestId(): int|string
+    {
+        return $this->verifyRequestId;
+    }
+
+    public function setVerifyRequestId(int|string $verifyRequestId): static
+    {
+        $this->verifyRequestId = $verifyRequestId;
+        return $this;
+    }
+
+    private function generateRequestId(): static
+    {
+        $this->requestId = time() . rand(1000, 9999);
+
+        return $this;
+    }
+
+    public function getAmount(): float
+    {
+        return $this->amount;
+    }
+
+    public function setAmount(float $amount): Floosak
+    {
+        $this->amount = $amount;
+        return $this;
+    }
+
+    public function getClientPhone(): string
+    {
+        return $this->clientPhone;
+    }
+
+    public function setClientPhone(string $clientPhone): Floosak
+    {
+        $this->clientPhone = $clientPhone;
+        return $this;
+    }
+
+    public function getPurpose(): string
+    {
+        return $this->purpose;
+    }
+
+    public function setPurpose(string $purpose): Floosak
+    {
+        $this->purpose = $purpose;
+        return $this;
+    }
+
+    public function getPurchaseId(): int|string
+    {
+        return $this->purchaseId;
+    }
+
+    public function setPurchaseId(int|string $purchaseId): Floosak
+    {
+        $this->purchaseId = $purchaseId;
+        return $this;
+    }
+
+    public function getTransactionId(): int|string
+    {
+        return $this->transactionId;
+    }
+
+    public function setTransactionId(int|string $transactionId): Floosak
+    {
+        $this->transactionId = $transactionId;
+        return $this;
+    }
+
     private function getHeaders(): array
     {
         return [
@@ -74,9 +155,11 @@ class Floosak extends PaymentGateway
         ];
     }
 
-    /**
-     * @throws ConnectionException
-     */
+    private function getAuthorization(): string
+    {
+        return 'Bearer ' . config('yemeni-payment-gateways.floosak.key');
+    }
+
     public function requestKey(): static
     {
         try {
@@ -86,23 +169,17 @@ class Floosak extends PaymentGateway
                     'short_code' => $this->getShortCode(),
                 ]);
 
-            // Optional: You might want to handle the response here, like logging or processing it.
-            if ($this->response->successful()) {
-                $this->requestId = $this->response->object()->request_id;
-            } else {
-
+            if ($this->response->failed()) {
+                throw new RuntimeException($this->response->object()->message);
             }
+
         } catch (\Exception $e) {
-            // Handle the exception, log error, or throw a custom exception
-            throw new RuntimeException(__CLASS__ . '::' . __FUNCTION__  . $e->getMessage());
+            throw new RuntimeException(__CLASS__ . '::' . __FUNCTION__ . ' ' . $e->getMessage());
         }
 
         return $this;
     }
 
-    /**
-     * @throws ConnectionException
-     */
     public function verifyKey(): static
     {
         try {
@@ -112,45 +189,92 @@ class Floosak extends PaymentGateway
                     'request_id' => $this->getRequestId()
                 ]);
 
-            // Optional: You might want to handle the response here, like logging or processing it.
-            if ($this->response->successful()) {
-                $this->requestId = $this->response->object()->request_id;
-            } else {
-
+            if ($this->response->failed()) {
+                throw new RuntimeException($this->response->object()->message);
             }
         } catch (\Exception $e) {
-            // Handle the exception, log error, or throw a custom exception
-            throw new RuntimeException(__CLASS__ . '::' . __FUNCTION__  . $e->getMessage());
+            throw new RuntimeException(__CLASS__ . '::' . __FUNCTION__ . ' '  . $e->getMessage());
         }
 
         return $this;
     }
 
-    /**
-     * @throws ConnectionException
-     */
-    public function requestAndVerifyKey(): static
+    public function purchase(): static
     {
-        $requestId = $this->requestKey()->getResponse()->object()->request_id;
-        $this
-            ->setRequestId($this->getRequestId())
-            ->setOtp($this->getOtp())
-            ->verifyKey();
+        try {
+            $this->response = Http::withHeaders($this->getHeaders())
+                ->withToken($this->getKey())
+                ->post($this->getBaseUrl() . "api/v1/merchant/p2mcl", [
+                    'amount' => $this->getAmount(),
+                    'wallet_id' => $this->getWalletId(),
+                    'target_phone' => $this->getClientPhone(),
+                    'purpose' => $this->getPurpose(),
+                ]);
+
+            if ($this->response->failed()) {
+                throw new RuntimeException($this->response->object()->message);
+            }
+        } catch (\Exception $e) {
+            throw new RuntimeException(__CLASS__ . '::' . __FUNCTION__ . ' '  . $e->getMessage());
+        }
 
         return $this;
     }
 
-    /**
-     * @throws ConnectionException
-     */
-    public function pay(float|int $amount): static
+    public function confirmPurchase(): static
     {
-        $this->response = Http::withHeaders($this->getHeaders())
-            ->post($this->getBaseUrl() . "api/v1/wallet/pay", [
-                'amount' => $amount,
-                'wallet_id' => $this->getWalletId(),
-                'key' => $this->getKey()
-            ]);
+        try {
+            $this->response = Http::withHeaders($this->getHeaders())
+                ->withToken($this->getKey())
+                ->post($this->getBaseUrl() . "api/v1/merchant/p2mcl/confirm", [
+                    'purchase_id' => $this->getPurchaseId(),
+                    'otp' => $this->getOtp(),
+                ]);
+
+            if ($this->response->failed()) {
+                throw new RuntimeException($this->response->object()->message);
+            }
+        } catch (\Exception $e) {
+            throw new RuntimeException(__CLASS__ . '::' . __FUNCTION__ . ' '  . $e->getMessage());
+        }
+
+        return $this;
+    }
+
+    public function rejectPurchase(): static
+    {
+        try {
+            $this->response = Http::withHeaders($this->getHeaders())
+                ->withToken($this->getKey())
+                ->post($this->getBaseUrl() . "api/v1/merchant/p2mcl/reject/" . $this->getPurchaseId());
+
+            if ($this->response->failed()) {
+                throw new RuntimeException($this->response->object()->message);
+            }
+        } catch (\Exception $e) {
+            throw new RuntimeException(__CLASS__ . '::' . __FUNCTION__ . ' '  . $e->getMessage());
+        }
+
+        return $this;
+    }
+
+    public function refund(): static
+    {
+        try {
+            $this->response = Http::withHeaders($this->getHeaders())
+                ->withToken($this->getKey())
+                ->post($this->getBaseUrl() . "api/v1/merchant/p2mcl/refund", [
+                    'transaction_id' => $this->getTransactionId(),
+                    'amount' => $this->getAmount(),
+                    'request_id' => $this->generateRequestId()
+                ]);
+
+            if ($this->response->failed()) {
+                throw new RuntimeException($this->response->object()->message);
+            }
+        } catch (\Exception $e) {
+            throw new RuntimeException(__CLASS__ . '::' . __FUNCTION__ . ' '  . $e->getMessage());
+        }
 
         return $this;
     }

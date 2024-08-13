@@ -7,5 +7,6 @@ return [
         'short_code' => env('FLOOSAK_SHORT_CODE'),
         'wallet_id' => env('FLOOSAK_WALLET_ID'),
         'key' => env('FLOOSAK_KEY'),
+        'verify_request_id' => env('FLOOSAK_VERIFY_REQUEST_ID')
     ]
 ];
