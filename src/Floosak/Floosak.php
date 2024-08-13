@@ -10,7 +10,7 @@ class Floosak extends PaymentGateway
 {
     private string|int $otp;
 
-    private string|int $requestId;
+    private string|int|null $requestId = null;
     private string|int $verifyRequestId;
 
     private float $amount;
@@ -222,7 +222,7 @@ class Floosak extends PaymentGateway
             $this->response = Http::withHeaders($this->getHeaders())
                 ->withToken($this->getKey())
                 ->post($this->getBaseUrl() . "api/v1/merchant/p2mcl/confirm", [
-                    'purchase_id' => $this->getPurchaseId(),
+                    'purchase_id' => $this->getTransactionId(),
                     'otp' => $this->getOtp(),
                 ]);
 
