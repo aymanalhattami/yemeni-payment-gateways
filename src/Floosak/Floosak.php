@@ -17,7 +17,7 @@ class Floosak extends PaymentGateway
     private string|int $verifyRequestId;
 
     private float $amount;
-    private string $clientPhone;
+    private string $targetPhone;
     private string $purpose;
     private string|int $purchaseId;
     private string|int $transactionId;
@@ -102,14 +102,14 @@ class Floosak extends PaymentGateway
         return $this;
     }
 
-    public function getClientPhone(): string
+    public function getTargetPhone(): string
     {
-        return $this->clientPhone;
+        return $this->targetPhone;
     }
 
-    public function setClientPhone(string $clientPhone): Floosak
+    public function setTargetPhone(string $targetPhone): Floosak
     {
-        $this->clientPhone = $clientPhone;
+        $this->targetPhone = $targetPhone;
         return $this;
     }
 
@@ -207,7 +207,7 @@ class Floosak extends PaymentGateway
                 ->post($this->getBaseUrl() . "api/v1/merchant/p2mcl", [
                     'amount' => $this->getAmount(),
                     'wallet_id' => $this->getWalletId(),
-                    'target_phone' => $this->getClientPhone(),
+                    'target_phone' => $this->getTargetPhone(),
                     'purpose' => $this->getPurpose(),
                 ]);
 
