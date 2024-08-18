@@ -98,6 +98,10 @@ class Floosak extends PaymentGateway
 
     public function getTargetPhone(): string
     {
+        if(!(str($this->targetPhone)->startsWith('967') or str($this->targetPhone)->startsWith('00967') or str($this->targetPhone)->startsWith('+967'))) {
+            $this->targetPhone = '967' .  $this->targetPhone;
+        }
+
         return $this->targetPhone;
     }
 
