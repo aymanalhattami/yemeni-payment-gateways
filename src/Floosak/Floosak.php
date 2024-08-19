@@ -174,6 +174,7 @@ class Floosak extends PaymentGateway
                 $this->unifiedResponse
                     ->status(Status::Success->value)
                     ->success(true)
+                    ->message($this->response->object()?->message)
                     ->objectResponse($this->response->object());
             }
 
