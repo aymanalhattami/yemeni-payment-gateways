@@ -159,9 +159,6 @@ class Floosak extends PaymentGateway
         return 'Bearer ' . config('yemeni-payment-gateways.floosak.key');
     }
 
-    /**
-     * @throws FloosakException
-     */
     public function requestKey(): static
     {
         try {
@@ -181,7 +178,12 @@ class Floosak extends PaymentGateway
             }
 
         } catch (\Exception $e) {
-            throw new FloosakException($e->getMessage());
+//            throw new FloosakException($e->getMessage());
+            $this->unifiedResponse
+                ->status(Status::Failed)
+                ->success(false)
+                ->message($e->getMessage())
+                ->objectResponse($this->response->object());
         }
 
         return $this;
@@ -201,6 +203,11 @@ class Floosak extends PaymentGateway
 
             if ($this->response->failed()) {
                 throw new FloosakException($this->response->object()->message);
+            } else {
+                $this->unifiedResponse
+                    ->status(Status::Success)
+                    ->success(true)
+                    ->objectResponse($this->response->object());
             }
         } catch (\Exception $e) {
             throw new FloosakException($e->getMessage());

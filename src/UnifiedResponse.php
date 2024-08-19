@@ -9,19 +9,20 @@ class UnifiedResponse implements MakeInterface
 {
     use HasMake;
 
-    private Status $status;
+    private Status $status = Status::Success;
 
-    private bool $success;
+    private bool $success = true;
+    private ?string $message = null;
 
-    private array $arrayResponse;
-    private object $objectResponse;
+    private array $arrayResponse = [];
+    private ?object $objectResponse = null;
 
     public function getStatus(): Status
     {
         return $this->status;
     }
 
-    public function status(Status $status): self
+    public function status(Status $status): static
     {
         $this->status = $status;
         return $this;
@@ -32,7 +33,7 @@ class UnifiedResponse implements MakeInterface
         return $this->success;
     }
 
-    public function success(bool $success): self
+    public function success(bool $success): static
     {
         $this->success = $success;
         return $this;
@@ -43,20 +44,31 @@ class UnifiedResponse implements MakeInterface
         return $this->arrayResponse;
     }
 
-    public function arrayResponse(array $response): self
+    public function arrayResponse(array $response): static
     {
         $this->arrayResponse = $response;
         return $this;
     }
 
-    public function getObjectResponse(): object
+    public function getObjectResponse(): ?object
     {
         return $this->objectResponse;
     }
 
-    public function objectResponse(object $response): self
+    public function objectResponse(object $response): static
     {
         $this->objectResponse = $response;
+        return $this;
+    }
+
+    public function getMessage(): ?string
+    {
+        return $this->message;
+    }
+
+    public function message(string $message): static
+    {
+        $this->message = $message;
         return $this;
     }
 }
