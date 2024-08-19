@@ -158,6 +158,9 @@ class Floosak extends PaymentGateway
         return 'Bearer ' . config('yemeni-payment-gateways.floosak.key');
     }
 
+    /**
+     * @throws FloosakException
+     */
     public function requestKey(): static
     {
         try {
@@ -168,11 +171,11 @@ class Floosak extends PaymentGateway
                 ]);
 
             if ($this->response->failed()) {
-                throw new RuntimeException($this->response->object()->message);
+                throw new FloosakException($this->response->object()->message);
             }
 
         } catch (\Exception $e) {
-            throw new RuntimeException(__CLASS__ . '::' . __FUNCTION__ . ' ' . $e->getMessage());
+            throw new FloosakException($e->getMessage());
         }
 
         return $this;
@@ -220,7 +223,7 @@ class Floosak extends PaymentGateway
                 throw new FloosakException($this->response->object()->message);
             }
         } catch (\Exception $e) {
-            throw new FloosakException(__CLASS__ . '::' . __FUNCTION__ . ' '  . $e->getMessage());
+            throw new FloosakException($e->getMessage());
         }
 
         return $this;
@@ -243,7 +246,7 @@ class Floosak extends PaymentGateway
                 throw new FloosakException($this->response->object()->message);
             }
         } catch (\Exception $e) {
-            throw new FloosakException(__CLASS__ . '::' . __FUNCTION__ . ' '  . $e->getMessage());
+            throw new FloosakException($e->getMessage());
         }
 
         return $this;
@@ -263,7 +266,7 @@ class Floosak extends PaymentGateway
                 throw new FloosakException($this->response->object()->message);
             }
         } catch (\Exception $e) {
-            throw new FloosakException(__CLASS__ . '::' . __FUNCTION__ . ' '  . $e->getMessage());
+            throw new FloosakException($e->getMessage());
         }
 
         return $this;
@@ -287,7 +290,7 @@ class Floosak extends PaymentGateway
                 throw new FloosakException($this->response->object()->message);
             }
         } catch (\Exception $e) {
-            throw new FloosakException(__CLASS__ . '::' . __FUNCTION__ . ' '  . $e->getMessage());
+            throw new FloosakException($e->getMessage());
         }
 
         return $this;
