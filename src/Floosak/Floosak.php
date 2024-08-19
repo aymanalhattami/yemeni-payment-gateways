@@ -353,7 +353,7 @@ class Floosak extends PaymentGateway
     public function storeVerifiedKeyToEnv(): static
     {
         EnvEditor::make()
-            ->set('FLOOSAK_KEY', $this->getResponse()->object()?->data['key']);
+            ->set('FLOOSAK_KEY', $this->getResponse()->object()?->key);
 
         return $this;
     }
