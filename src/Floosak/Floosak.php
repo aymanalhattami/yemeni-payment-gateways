@@ -2,6 +2,7 @@
 
 namespace Aymanalhattami\YemeniPaymentGateways\Floosak;
 
+use Aymanalhattami\Toolbox\EnvEditor;
 use Aymanalhattami\YemeniPaymentGateways\PaymentGateway;
 use Aymanalhattami\YemeniPaymentGateways\Status;
 use Exception;
@@ -333,6 +334,14 @@ class Floosak extends PaymentGateway
                 ->message($e->getMessage())
                 ->data($this->response->json());
         }
+
+        return $this;
+    }
+
+    public function storeVerifyRequestIdToEnv(): static
+    {
+        EnvEditor::make()
+            ->set('FLOOSAK_VERIFY_REQUEST_ID', $this->getResponse()->object()->data->request_id);
 
         return $this;
     }
