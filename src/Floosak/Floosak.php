@@ -53,7 +53,7 @@ class Floosak extends PaymentGateway
         return $this->otp;
     }
 
-    public function setOtp(int|string $otp): static
+    public function otp(int|string $otp): static
     {
         $this->otp = $otp;
 
