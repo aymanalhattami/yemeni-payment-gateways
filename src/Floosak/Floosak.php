@@ -14,7 +14,7 @@ class Floosak extends PaymentGateway
     private string|int $otp;
 
     private string|int|null $requestId = null;
-    private string|int $verifyRequestId;
+    private string|int|null $verifyRequestId = null;
 
     private float $amount;
     private string $targetPhone;
@@ -79,6 +79,10 @@ class Floosak extends PaymentGateway
 
     public function getVerifyRequestId(): int|string
     {
+        if(is_null($this->verifyRequestId)) {
+            $this->verifyRequestId = config('yemeni-payment-gateways.floosak.verify_request_id');
+        }
+
         return $this->verifyRequestId;
     }
 
@@ -197,7 +201,7 @@ class Floosak extends PaymentGateway
             $this->response = Http::withHeaders($this->getHeaders())
                 ->post($this->getBaseUrl() . "api/v1/verify/key", [
                     'otp' => $this->getOtp(),
-                    'request_id' => $this->getRequestId()
+                    'request_id' => $this->getVerifyRequestId()
                 ]);
 
             if ($this->response->failed()) {
@@ -341,7 +345,7 @@ class Floosak extends PaymentGateway
     public function storeVerifyRequestIdToEnv(): static
     {
         EnvEditor::make()
-            ->set('FLOOSAK_VERIFY_REQUEST_ID', $this->getResponse()->object()->data->request_id);
+            ->set('FLOOSAK_VERIFY_REQUEST_ID', $this->getResponse()->object()?->request_id);
 
         return $this;
     }
