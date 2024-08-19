@@ -4,6 +4,7 @@ namespace Aymanalhattami\YemeniPaymentGateways\Floosak;
 
 use Aymanalhattami\YemeniPaymentGateways\PaymentGateway;
 use Aymanalhattami\YemeniPaymentGateways\Status;
+use Exception;
 use Illuminate\Support\Facades\Http;
 use RuntimeException;
 
@@ -169,7 +170,7 @@ class Floosak extends PaymentGateway
                 ]);
 
             if ($this->response->failed()) {
-                throw new FloosakException($this->response->object()->message);
+                throw new Exception($this->response->object()->message);
             } else {
                 $this->unifiedResponse
                     ->status(Status::Success->value)
@@ -179,7 +180,6 @@ class Floosak extends PaymentGateway
             }
 
         } catch (\Exception $e) {
-//            throw new FloosakException($e->getMessage());
             $this->unifiedResponse
                 ->status(Status::Failed->value)
                 ->success(false)
@@ -190,9 +190,6 @@ class Floosak extends PaymentGateway
         return $this;
     }
 
-    /**
-     * @throws FloosakException
-     */
     public function verifyKey(): static
     {
         try {
@@ -203,23 +200,24 @@ class Floosak extends PaymentGateway
                 ]);
 
             if ($this->response->failed()) {
-                throw new FloosakException($this->response->object()->message);
+                throw new Exception($this->response->object()->message);
             } else {
                 $this->unifiedResponse
                     ->status(Status::Success->value)
                     ->success(true)
                     ->objectResponse($this->response->object());
             }
-        } catch (\Exception $e) {
-            throw new FloosakException($e->getMessage());
+        } catch (Exception $e) {
+            $this->unifiedResponse
+                ->status(Status::Failed->value)
+                ->success(false)
+                ->message($e->getMessage())
+                ->objectResponse($this->response->object());
         }
 
         return $this;
     }
 
-    /**
-     * @throws FloosakException
-     */
     public function purchase(): static
     {
         try {
@@ -234,18 +232,24 @@ class Floosak extends PaymentGateway
                 ]);
 
             if ($this->response->failed()) {
-                throw new FloosakException($this->response->object()->message);
+                throw new Exception($this->response->object()->message);
+            } else {
+                $this->unifiedResponse
+                    ->status(Status::Success->value)
+                    ->success(true)
+                    ->objectResponse($this->response->object());
             }
-        } catch (\Exception $e) {
-            throw new FloosakException($e->getMessage());
+        } catch (Exception $e) {
+            $this->unifiedResponse
+                ->status(Status::Failed->value)
+                ->success(false)
+                ->message($e->getMessage())
+                ->objectResponse($this->response->object());
         }
 
         return $this;
     }
 
-    /**
-     * @throws FloosakException
-     */
     public function confirmPurchase(): static
     {
         try {
@@ -258,17 +262,23 @@ class Floosak extends PaymentGateway
 
             if ($this->response->failed()) {
                 throw new FloosakException($this->response->object()->message);
+            } else {
+                $this->unifiedResponse
+                    ->status(Status::Success->value)
+                    ->success(true)
+                    ->objectResponse($this->response->object());
             }
         } catch (\Exception $e) {
-            throw new FloosakException($e->getMessage());
+            $this->unifiedResponse
+                ->status(Status::Failed->value)
+                ->success(false)
+                ->message($e->getMessage())
+                ->objectResponse($this->response->object());
         }
 
         return $this;
     }
 
-    /**
-     * @throws FloosakException
-     */
     public function rejectPurchase(): static
     {
         try {
@@ -278,17 +288,23 @@ class Floosak extends PaymentGateway
 
             if ($this->response->failed()) {
                 throw new FloosakException($this->response->object()->message);
+            } else {
+                $this->unifiedResponse
+                    ->status(Status::Success->value)
+                    ->success(true)
+                    ->objectResponse($this->response->object());
             }
-        } catch (\Exception $e) {
-            throw new FloosakException($e->getMessage());
+        } catch (Exception $e) {
+            $this->unifiedResponse
+                ->status(Status::Failed->value)
+                ->success(false)
+                ->message($e->getMessage())
+                ->objectResponse($this->response->object());
         }
 
         return $this;
     }
 
-    /**
-     * @throws FloosakException
-     */
     public function refund(): static
     {
         try {
@@ -301,10 +317,19 @@ class Floosak extends PaymentGateway
                 ]);
 
             if ($this->response->failed()) {
-                throw new FloosakException($this->response->object()->message);
+                throw new Exception($this->response->object()->message);
+            } else {
+                $this->unifiedResponse
+                    ->status(Status::Success->value)
+                    ->success(true)
+                    ->objectResponse($this->response->object());
             }
         } catch (\Exception $e) {
-            throw new FloosakException($e->getMessage());
+            $this->unifiedResponse
+                ->status(Status::Failed->value)
+                ->success(false)
+                ->message($e->getMessage())
+                ->objectResponse($this->response->object());
         }
 
         return $this;
