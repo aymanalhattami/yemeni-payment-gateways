@@ -176,7 +176,7 @@ class Floosak extends PaymentGateway
                     ->status(Status::Success->value)
                     ->success(true)
                     ->message($this->response->object()?->message)
-                    ->objectResponse($this->response->object());
+                    ->data($this->response->json());
             }
 
         } catch (\Exception $e) {
@@ -184,7 +184,7 @@ class Floosak extends PaymentGateway
                 ->status(Status::Failed->value)
                 ->success(false)
                 ->message($e->getMessage())
-                ->objectResponse($this->response->object());
+                ->data($this->response->json());
         }
 
         return $this;
@@ -205,14 +205,14 @@ class Floosak extends PaymentGateway
                 $this->unifiedResponse
                     ->status(Status::Success->value)
                     ->success(true)
-                    ->objectResponse($this->response->object());
+                    ->data($this->response->json());
             }
         } catch (Exception $e) {
             $this->unifiedResponse
                 ->status(Status::Failed->value)
                 ->success(false)
                 ->message($e->getMessage())
-                ->objectResponse($this->response->object());
+                ->data($this->response->json());
         }
 
         return $this;
@@ -237,14 +237,14 @@ class Floosak extends PaymentGateway
                 $this->unifiedResponse
                     ->status(Status::Success->value)
                     ->success(true)
-                    ->objectResponse($this->response->object());
+                    ->data($this->response->json());
             }
         } catch (Exception $e) {
             $this->unifiedResponse
                 ->status(Status::Failed->value)
                 ->success(false)
                 ->message($e->getMessage())
-                ->objectResponse($this->response->object());
+                ->data($this->response->json());
         }
 
         return $this;
@@ -266,14 +266,14 @@ class Floosak extends PaymentGateway
                 $this->unifiedResponse
                     ->status(Status::Success->value)
                     ->success(true)
-                    ->objectResponse($this->response->object());
+                    ->data($this->response->json());
             }
         } catch (\Exception $e) {
             $this->unifiedResponse
                 ->status(Status::Failed->value)
                 ->success(false)
                 ->message($e->getMessage())
-                ->objectResponse($this->response->object());
+                ->data($this->response->json());
         }
 
         return $this;
@@ -292,14 +292,14 @@ class Floosak extends PaymentGateway
                 $this->unifiedResponse
                     ->status(Status::Success->value)
                     ->success(true)
-                    ->objectResponse($this->response->object());
+                    ->data($this->response->json());
             }
         } catch (Exception $e) {
             $this->unifiedResponse
                 ->status(Status::Failed->value)
                 ->success(false)
                 ->message($e->getMessage())
-                ->objectResponse($this->response->object());
+                ->data($this->response->json());
         }
 
         return $this;
@@ -322,14 +322,14 @@ class Floosak extends PaymentGateway
                 $this->unifiedResponse
                     ->status(Status::Success->value)
                     ->success(true)
-                    ->objectResponse($this->response->object());
+                    ->data($this->response->json());
             }
         } catch (\Exception $e) {
             $this->unifiedResponse
                 ->status(Status::Failed->value)
                 ->success(false)
                 ->message($e->getMessage())
-                ->objectResponse($this->response->object());
+                ->data($this->response->json());
         }
 
         return $this;

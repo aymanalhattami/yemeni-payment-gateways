@@ -14,8 +14,7 @@ class UnifiedResponse implements MakeInterface
     private bool $success = true;
     private ?string $message = null;
 
-    private array $arrayResponse = [];
-    private ?object $objectResponse = null;
+    private array $data = [];
 
     public function getStatus(): string
     {
@@ -39,25 +38,14 @@ class UnifiedResponse implements MakeInterface
         return $this;
     }
 
-    public function getArrayResponse(): array
+    public function getData(): array
     {
-        return $this->arrayResponse;
+        return $this->data;
     }
 
-    public function arrayResponse(array $response): static
+    public function data(array $data): static
     {
-        $this->arrayResponse = $response;
-        return $this;
-    }
-
-    public function getObjectResponse(): ?object
-    {
-        return $this->objectResponse;
-    }
-
-    public function objectResponse(object $response): static
-    {
-        $this->objectResponse = $response;
+        $this->data = $data;
         return $this;
     }
 
