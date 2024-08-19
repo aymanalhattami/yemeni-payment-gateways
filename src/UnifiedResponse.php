@@ -9,7 +9,7 @@ class UnifiedResponse implements MakeInterface
 {
     use HasMake;
 
-    private Status $status = Status::Success;
+    private string $status = Status::Success->value;
 
     private bool $success = true;
     private ?string $message = null;
@@ -17,12 +17,12 @@ class UnifiedResponse implements MakeInterface
     private array $arrayResponse = [];
     private ?object $objectResponse = null;
 
-    public function getStatus(): Status
+    public function getStatus(): string
     {
         return $this->status;
     }
 
-    public function status(Status $status): static
+    public function status(string $status): static
     {
         $this->status = $status;
         return $this;

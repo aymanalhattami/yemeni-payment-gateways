@@ -172,7 +172,7 @@ class Floosak extends PaymentGateway
                 throw new FloosakException($this->response->object()->message);
             } else {
                 $this->unifiedResponse
-                    ->status(Status::Success)
+                    ->status(Status::Success->value)
                     ->success(true)
                     ->objectResponse($this->response->object());
             }
@@ -180,7 +180,7 @@ class Floosak extends PaymentGateway
         } catch (\Exception $e) {
 //            throw new FloosakException($e->getMessage());
             $this->unifiedResponse
-                ->status(Status::Failed)
+                ->status(Status::Failed->value)
                 ->success(false)
                 ->message($e->getMessage())
                 ->objectResponse($this->response->object());
@@ -205,7 +205,7 @@ class Floosak extends PaymentGateway
                 throw new FloosakException($this->response->object()->message);
             } else {
                 $this->unifiedResponse
-                    ->status(Status::Success)
+                    ->status(Status::Success->value)
                     ->success(true)
                     ->objectResponse($this->response->object());
             }
