@@ -2,13 +2,19 @@
 
 namespace Aymanalhattami\YemeniPaymentGateways;
 
-class UnifiedResponse
+use Aymanalhattami\Toolbox\Interfaces\MakeInterface;
+use Aymanalhattami\Toolbox\Traits\HasMake;
+
+class UnifiedResponse implements MakeInterface
 {
+    use HasMake;
+
     private Status $status;
 
     private bool $success;
 
-    private array $data;
+    private array $arrayResponse;
+    private object $objectResponse;
 
     public function getStatus(): Status
     {
@@ -32,14 +38,25 @@ class UnifiedResponse
         return $this;
     }
 
-    public function getData(): array
+    public function getArrayResponse(): array
     {
-        return $this->data;
+        return $this->arrayResponse;
     }
 
-    public function setData(array $data): self
+    public function arrayResponse(array $response): self
     {
-        $this->data = $data;
+        $this->arrayResponse = $response;
+        return $this;
+    }
+
+    public function getObjectResponse(): object
+    {
+        return $this->objectResponse;
+    }
+
+    public function objectResponse(object $response): self
+    {
+        $this->objectResponse = $response;
         return $this;
     }
 }

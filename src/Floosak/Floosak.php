@@ -3,6 +3,7 @@
 namespace Aymanalhattami\YemeniPaymentGateways\Floosak;
 
 use Aymanalhattami\YemeniPaymentGateways\PaymentGateway;
+use Aymanalhattami\YemeniPaymentGateways\Status;
 use Illuminate\Support\Facades\Http;
 use RuntimeException;
 
@@ -172,6 +173,11 @@ class Floosak extends PaymentGateway
 
             if ($this->response->failed()) {
                 throw new FloosakException($this->response->object()->message);
+            } else {
+                $this->unifiedResponse
+                    ->status(Status::Success)
+                    ->success(true)
+                    ->objectResponse($this->response->object());
             }
 
         } catch (\Exception $e) {
