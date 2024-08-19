@@ -67,7 +67,7 @@ class Floosak extends PaymentGateway
         return $this->requestId;
     }
 
-    public function setRequestId(int|string $requestId): static
+    public function requestId(int|string $requestId): static
     {
         $this->requestId = $requestId;
 
@@ -79,7 +79,7 @@ class Floosak extends PaymentGateway
         return $this->verifyRequestId;
     }
 
-    public function setVerifyRequestId(int|string $verifyRequestId): static
+    public function verifyRequestId(int|string $verifyRequestId): static
     {
         $this->verifyRequestId = $verifyRequestId;
         return $this;
@@ -90,7 +90,7 @@ class Floosak extends PaymentGateway
         return $this->amount;
     }
 
-    public function setAmount(float $amount): Floosak
+    public function amount(float $amount): Floosak
     {
         $this->amount = $amount;
         return $this;
@@ -105,7 +105,7 @@ class Floosak extends PaymentGateway
         return $this->targetPhone;
     }
 
-    public function setTargetPhone(string $targetPhone): Floosak
+    public function targetPhone(string $targetPhone): Floosak
     {
         $this->targetPhone = $targetPhone;
         return $this;
@@ -116,7 +116,7 @@ class Floosak extends PaymentGateway
         return $this->purpose;
     }
 
-    public function setPurpose(string $purpose): Floosak
+    public function purpose(string $purpose): Floosak
     {
         $this->purpose = $purpose;
         return $this;
@@ -127,7 +127,7 @@ class Floosak extends PaymentGateway
         return $this->purchaseId;
     }
 
-    public function setPurchaseId(int|string $purchaseId): Floosak
+    public function purchaseId(int|string $purchaseId): Floosak
     {
         $this->purchaseId = $purchaseId;
         return $this;
@@ -138,7 +138,7 @@ class Floosak extends PaymentGateway
         return $this->transactionId;
     }
 
-    public function setTransactionId(int|string $transactionId): Floosak
+    public function transactionId(int|string $transactionId): Floosak
     {
         $this->transactionId = $transactionId;
         return $this;
@@ -178,6 +178,9 @@ class Floosak extends PaymentGateway
         return $this;
     }
 
+    /**
+     * @throws FloosakException
+     */
     public function verifyKey(): static
     {
         try {
@@ -188,15 +191,18 @@ class Floosak extends PaymentGateway
                 ]);
 
             if ($this->response->failed()) {
-                throw new RuntimeException($this->response->object()->message);
+                throw new FloosakException($this->response->object()->message);
             }
         } catch (\Exception $e) {
-            throw new RuntimeException(__CLASS__ . '::' . __FUNCTION__ . ' '  . $e->getMessage());
+            throw new FloosakException($e->getMessage());
         }
 
         return $this;
     }
 
+    /**
+     * @throws FloosakException
+     */
     public function purchase(): static
     {
         try {
@@ -211,15 +217,18 @@ class Floosak extends PaymentGateway
                 ]);
 
             if ($this->response->failed()) {
-                throw new RuntimeException($this->response->object()->message);
+                throw new FloosakException($this->response->object()->message);
             }
         } catch (\Exception $e) {
-            throw new RuntimeException(__CLASS__ . '::' . __FUNCTION__ . ' '  . $e->getMessage());
+            throw new FloosakException(__CLASS__ . '::' . __FUNCTION__ . ' '  . $e->getMessage());
         }
 
         return $this;
     }
 
+    /**
+     * @throws FloosakException
+     */
     public function confirmPurchase(): static
     {
         try {
@@ -231,15 +240,18 @@ class Floosak extends PaymentGateway
                 ]);
 
             if ($this->response->failed()) {
-                throw new RuntimeException($this->response->object()->message);
+                throw new FloosakException($this->response->object()->message);
             }
         } catch (\Exception $e) {
-            throw new RuntimeException(__CLASS__ . '::' . __FUNCTION__ . ' '  . $e->getMessage());
+            throw new FloosakException(__CLASS__ . '::' . __FUNCTION__ . ' '  . $e->getMessage());
         }
 
         return $this;
     }
 
+    /**
+     * @throws FloosakException
+     */
     public function rejectPurchase(): static
     {
         try {
@@ -248,15 +260,18 @@ class Floosak extends PaymentGateway
                 ->post($this->getBaseUrl() . "api/v1/merchant/p2mcl/reject/" . $this->getPurchaseId());
 
             if ($this->response->failed()) {
-                throw new RuntimeException($this->response->object()->message);
+                throw new FloosakException($this->response->object()->message);
             }
         } catch (\Exception $e) {
-            throw new RuntimeException(__CLASS__ . '::' . __FUNCTION__ . ' '  . $e->getMessage());
+            throw new FloosakException(__CLASS__ . '::' . __FUNCTION__ . ' '  . $e->getMessage());
         }
 
         return $this;
     }
 
+    /**
+     * @throws FloosakException
+     */
     public function refund(): static
     {
         try {
@@ -269,10 +284,10 @@ class Floosak extends PaymentGateway
                 ]);
 
             if ($this->response->failed()) {
-                throw new RuntimeException($this->response->object()->message);
+                throw new FloosakException($this->response->object()->message);
             }
         } catch (\Exception $e) {
-            throw new RuntimeException(__CLASS__ . '::' . __FUNCTION__ . ' '  . $e->getMessage());
+            throw new FloosakException(__CLASS__ . '::' . __FUNCTION__ . ' '  . $e->getMessage());
         }
 
         return $this;
