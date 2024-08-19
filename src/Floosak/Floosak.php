@@ -236,6 +236,7 @@ class Floosak extends PaymentGateway
             } else {
                 $this->unifiedResponse
                     ->status(Status::Success->value)
+                    ->message($this->response->object()?->message)
                     ->success(true)
                     ->data($this->response->json());
             }
@@ -261,11 +262,12 @@ class Floosak extends PaymentGateway
                 ]);
 
             if ($this->response->failed()) {
-                throw new FloosakException($this->response->object()->message);
+                throw new Exception($this->response->object()->message);
             } else {
                 $this->unifiedResponse
                     ->status(Status::Success->value)
                     ->success(true)
+                    ->message($this->response->object()?->message)
                     ->data($this->response->json());
             }
         } catch (\Exception $e) {
@@ -287,7 +289,7 @@ class Floosak extends PaymentGateway
                 ->post($this->getBaseUrl() . "api/v1/merchant/p2mcl/reject/" . $this->getPurchaseId());
 
             if ($this->response->failed()) {
-                throw new FloosakException($this->response->object()->message);
+                throw new Exception($this->response->object()->message);
             } else {
                 $this->unifiedResponse
                     ->status(Status::Success->value)
