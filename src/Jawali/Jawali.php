@@ -6,12 +6,16 @@ use Aymanalhattami\Toolbox\EnvEditor;
 use Aymanalhattami\YemeniPaymentGateways\PaymentGateway;
 use Aymanalhattami\YemeniPaymentGateways\Status;
 use Exception;
-use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 
 class Jawali extends PaymentGateway
 {
+    private string|int $voucher;
+    private string|int $receiverPhone;
+    private string $purpose;
+    private string|int $refId;
+
     private function getBaseUrl(): string
     {
         $url = rtrim(config('yemeni-payment-gateways.jawali.base_url'), '/');
@@ -126,12 +130,75 @@ class Jawali extends PaymentGateway
         return $this;
     }
 
-//    public function storeLoginAccessTokenToEnv(): static
-//    {
-//        EnvEditor::make()->set('JAWALI_ACCESS_TOKEN', $this->getResponse()->object()?->access_token);
-//
-//        return $this;
-//    }
+    public function ecommerceInquiry(): static
+    {
+        try {
+            $data = [
+                "header" => [
+                    "serviceDetail" => [
+                        "corrID" => "59ba381c-1f5f-4480-90cc-0660b9cc850e",
+                        "domainName" => "MerchantDomain",
+                        "serviceName" => "PAYAG.ECOMMERCEINQUIRY",
+                    ],
+                    "signonDetail" => [
+                        "clientID" => "WeCash",
+                        "orgID" => $this->getOrgId(),
+                        "userID" => $this->getUserId(),
+                        "externalUser" => "user1",
+                    ],
+                    "messageContext" => [
+                        "clientDate" => $this->getTimestampInMs(),
+                        "bodyType" => "Clear",
+                    ],
+                ],
+                "body" => [
+                    "agentWallet" => $this->getAgentWallet(),
+                    "password" => $this->getAgentWalletPassword(),
+                    "accessToken" => $this->getWalletToken(),
+                    "voucher" => $this->getVoucher(),
+                    "receiverMobile" => $this->getReceiverPhone(),
+                    "purpose" => $this->getPurpose(),
+                    "refId" => $this->getRefId(),
+                ],
+            ];
+
+            $this->response = Http::asJson()
+                ->withToken($this->getLoginToken())
+                ->post($this->getBaseUrl() . 'paygate/v1/ws/callWS', $data);
+
+            if ($this->response->failed()) {
+                throw new Exception($this->response->object()?->error_description);
+            } else {
+                if($this->response->object()->responseStatus->systemStatus == -1) {
+                    $this->unifiedResponse
+                        ->status(Status::Failed->value)
+                        ->success(false)
+                        ->message($this->response->object()->responseStatus->systemStatusDesc)
+                        ->data($this->response->json());
+                } elseif($this->response->object()->responseStatus->systemStatus == 0) {
+                    $this->unifiedResponse
+                        ->status(Status::Success->value)
+                        ->success(true)
+                        ->message($this->response->object()->responseStatus->systemStatusDesc)
+                        ->data($this->response->json());
+                } else {
+                    $this->unifiedResponse
+                        ->status(Status::Unknown->value)
+                        ->success(false)
+                        ->message($this->response->object()->responseStatus->systemStatusDesc)
+                        ->data($this->response->json());
+                }
+            }
+        } catch (Exception $e) {
+            $this->unifiedResponse
+                ->status(Status::Failed->value)
+                ->success(false)
+                ->message($e->getMessage())
+                ->data($this->response->json());
+        }
+
+        return $this;
+    }
 
     public function storeLoginTokenToEnv(): static
     {
@@ -182,6 +249,59 @@ class Jawali extends PaymentGateway
     private function getLoginToken(): string|int
     {
         return config('yemeni-payment-gateways.jawali.login_token');
+    }
+
+    private function getWalletToken(): string|int
+    {
+        return config('yemeni-payment-gateways.jawali.wallet_token');
+    }
+
+    public function voucher(string|int $voucher): static
+    {
+        $this->voucher = $voucher;
+
+        return $this;
+    }
+
+    private function getVoucher(): string|int
+    {
+        return $this->voucher;
+    }
+
+    public function receiverPhone(string|int $receiverPhone): static
+    {
+        $this->receiverPhone = $receiverPhone;
+
+        return $this;
+    }
+
+    private function getReceiverPhone(): string|int
+    {
+        return $this->receiverPhone;
+    }
+
+    public function purpose(string $purpose): static
+    {
+        $this->purpose = $purpose;
+
+        return $this;
+    }
+
+    private function getPurpose(): string|int
+    {
+        return $this->purpose;
+    }
+
+    public function refId(string|int $refId): static
+    {
+        $this->$refId = $refId;
+
+        return $this;
+    }
+
+    private function getRefId(): string|int
+    {
+        return $this->refId;
     }
 
 
