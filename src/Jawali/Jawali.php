@@ -103,19 +103,19 @@ class Jawali extends PaymentGateway
                     $this->unifiedResponse
                         ->status(Status::Failed->value)
                         ->success(false)
-                        ->message($this->response->object()->responseStatus->systemStatusDesc)
+                        ->message($this->response->object()->responseStatus->systemStatusDescNative)
                         ->data($this->response->json());
                 } elseif($this->response->object()->responseStatus->systemStatus == 0) {
                     $this->unifiedResponse
                         ->status(Status::Success->value)
                         ->success(true)
-                        ->message($this->response->object()->responseStatus->systemStatusDesc)
+                        ->message($this->response->object()->responseStatus->systemStatusDescNative)
                         ->data($this->response->json());
                 } else {
                     $this->unifiedResponse
                         ->status(Status::Unknown->value)
                         ->success(false)
-                        ->message($this->response->object()->responseStatus->systemStatusDesc)
+                        ->message($this->response->object()->responseStatus->systemStatusDescNative)
                         ->data($this->response->json());
                 }
             }
@@ -173,19 +173,19 @@ class Jawali extends PaymentGateway
                     $this->unifiedResponse
                         ->status(Status::Failed->value)
                         ->success(false)
-                        ->message($this->response->object()->responseStatus->systemStatusDesc)
+                        ->message($this->response->object()->responseStatus->systemStatusDescNative)
                         ->data($this->response->json());
                 } elseif($this->response->object()->responseStatus->systemStatus == 0) {
                     $this->unifiedResponse
                         ->status(Status::Success->value)
                         ->success(true)
-                        ->message($this->response->object()->responseStatus->systemStatusDesc)
+                        ->message($this->response->object()->responseStatus->systemStatusDescNative)
                         ->data($this->response->json());
                 } else {
                     $this->unifiedResponse
                         ->status(Status::Unknown->value)
                         ->success(false)
-                        ->message($this->response->object()->responseStatus->systemStatusDesc)
+                        ->message($this->response->object()->responseStatus->systemStatusDescNative)
                         ->data($this->response->json());
                 }
             }
