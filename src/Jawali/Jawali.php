@@ -126,16 +126,23 @@ class Jawali extends PaymentGateway
         return $this;
     }
 
-    public function storeLoginAccessTokenToEnv(): static
-    {
-        EnvEditor::make()->set('JAWALI_ACCESS_TOKEN', $this->getResponse()->object()?->access_token);
-
-        return $this;
-    }
+//    public function storeLoginAccessTokenToEnv(): static
+//    {
+//        EnvEditor::make()->set('JAWALI_ACCESS_TOKEN', $this->getResponse()->object()?->access_token);
+//
+//        return $this;
+//    }
 
     public function storeLoginTokenToEnv(): static
     {
         EnvEditor::make()->set('JAWALI_LOGIN_TOKEN', $this->getResponse()->object()?->access_token);
+
+        return $this;
+    }
+
+    public function storeWalletTokenToEnv(): static
+    {
+        EnvEditor::make()->set('JAWALI_WALLET_TOKEN', $this->getResponse()->object()?->responseBody->access_token);
 
         return $this;
     }

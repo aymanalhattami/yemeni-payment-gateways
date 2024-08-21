@@ -13,7 +13,7 @@ return [
     'jawali' => [
         'base_url' => env('JAWALI_BASE_URL'),
         'login_token' => env('JAWALI_LOGIN_TOKEN'),
-        'access_token' => env('JAWALI_ACCESS_TOKEN'),
+        'wallet_token' => env('JAWALI_WALLET_TOKEN'),
         'refresh_token' => env('JAWALI_REFRESH_TOKEN'),
         'org_id' => env('JAWALI_ORG_ID'),
         'user_id' => env('JAWALI_USER_ID'),
