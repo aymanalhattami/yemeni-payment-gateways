@@ -275,6 +275,72 @@ class Jawali extends PaymentGateway
         return $this;
     }
 
+    public function agentCheckStatus(): static
+    {
+        try {
+            $data = [
+                "header" => [
+                    "serviceDetail" => [
+                        "corrID" => "59ba381c-1f5f-4480-90cc-0660b9cc850e",
+                        "domainName" => "WalletDomain",
+                        "serviceName" => "PAYWA.AGENTCHECKSTATUS",
+                    ],
+                    "signonDetail" => [
+                        "clientID" => "WeCash",
+                        "orgID" => $this->getOrgId(),
+                        "userID" => $this->getUserId(),
+                        "externalUser" => "user1",
+                    ],
+                    "messageContext" => [
+                        "clientDate" => $this->getTimestampInMs(),
+                        "bodyType" => "Clear",
+                    ],
+                ],
+                "body" => [
+                    "agentWallet" => $this->getAgentWallet(),
+                    "password" => $this->getAgentWalletPassword(),
+                    "refId" => $this->getRefId(),
+                ],
+            ];
+
+            $this->response = Http::asJson()
+                ->withToken($this->getLoginToken())
+                ->post($this->getBaseUrl() . 'paygate/v1/ws/callWS', $data);
+
+            if ($this->response->failed()) {
+                throw new Exception($this->response->object()?->error_description);
+            } else {
+                if($this->response->object()->responseStatus->systemStatus == -1) {
+                    $this->unifiedResponse
+                        ->status(Status::Failed->value)
+                        ->success(false)
+                        ->message($this->response->object()->responseStatus->systemStatusDescNative)
+                        ->data($this->response->json());
+                } elseif($this->response->object()->responseStatus->systemStatus == 0) {
+                    $this->unifiedResponse
+                        ->status(Status::Success->value)
+                        ->success(true)
+                        ->message($this->response->object()->responseStatus->systemStatusDescNative)
+                        ->data($this->response->json());
+                } else {
+                    $this->unifiedResponse
+                        ->status(Status::Unknown->value)
+                        ->success(false)
+                        ->message($this->response->object()->responseStatus->systemStatusDescNative)
+                        ->data($this->response->json());
+                }
+            }
+        } catch (Exception $e) {
+            $this->unifiedResponse
+                ->status(Status::Failed->value)
+                ->success(false)
+                ->message($e->getMessage())
+                ->data($this->response->json() ?? []);
+        }
+
+        return $this;
+    }
+
     public function storeLoginTokenToEnv(): static
     {
         EnvEditor::make()->set('JAWALI_LOGIN_TOKEN', $this->getResponse()->object()?->access_token);
