@@ -2,6 +2,7 @@
 
 namespace Aymanalhattami\YemeniPaymentGateways\Jawali;
 
+use Aymanalhattami\Toolbox\EnvEditor;
 use Aymanalhattami\YemeniPaymentGateways\PaymentGateway;
 use Aymanalhattami\YemeniPaymentGateways\Status;
 use Exception;
@@ -58,5 +59,19 @@ class Jawali extends PaymentGateway
     private function getPassword(): string
     {
         return config('yemeni-payment-gateways.jawali.password');
+    }
+
+    public function storeAccessTokenToEnv(): static
+    {
+        EnvEditor::make()->set('JAWALI_ACCESS_TOKEN', $this->getResponse()->object()?->access_token);
+
+        return $this;
+    }
+
+    public function storeRefreshTokenToEnv(): static
+    {
+        EnvEditor::make()->set('JAWALI_REFRESH_TOKEN', $this->getResponse()->object()?->refresh_token);
+
+        return $this;
     }
 }
