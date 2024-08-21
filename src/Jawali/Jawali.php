@@ -391,7 +391,7 @@ class Jawali extends PaymentGateway
         return (string) $this->amount;
     }
 
-    private function currency($currency): static
+    public function currency($currency): static
     {
         $this->currency = $currency;
 
