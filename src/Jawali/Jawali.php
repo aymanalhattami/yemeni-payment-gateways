@@ -294,7 +294,7 @@ class Jawali extends PaymentGateway
 
     public function refId(string|int $refId): static
     {
-        $this->$refId = $refId;
+        $this->refId = $refId;
 
         return $this;
     }
