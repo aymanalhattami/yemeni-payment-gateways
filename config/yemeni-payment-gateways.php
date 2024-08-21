@@ -15,7 +15,7 @@ return [
         'login_token' => env('JAWALI_LOGIN_TOKEN'),
         'access_token' => env('JAWALI_ACCESS_TOKEN'),
         'org_id' => env('JAWALI_ORG_ID'),
-        'username' => env('JAWALI_USERNAME'),
+        'user_id' => env('JAWALI_USER_ID'),
         'password' => env('JAWALI_PASSWORD'),
         'agent_wallet' => env('JAWALI_AGENT_WALLET'),
         'agent_wallet_pwd' => env('JAWALI_AGENT_WALLET_PWD')
