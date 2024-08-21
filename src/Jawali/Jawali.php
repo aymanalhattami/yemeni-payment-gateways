@@ -52,7 +52,7 @@ class Jawali extends PaymentGateway
 
     private function getUsername(): string
     {
-        return config('yemeni-payment-gateways.jawali.username');
+        return config('yemeni-payment-gateways.jawali.user_id');
     }
 
     private function getPassword(): string
