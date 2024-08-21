@@ -61,7 +61,7 @@ class Jawali extends PaymentGateway
         return config('yemeni-payment-gateways.jawali.password');
     }
 
-    public function storeAccessTokenToEnv(): static
+    public function storeLoginAccessTokenToEnv(): static
     {
         EnvEditor::make()->set('JAWALI_ACCESS_TOKEN', $this->getResponse()->object()?->access_token);
 
