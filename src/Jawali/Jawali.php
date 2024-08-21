@@ -143,11 +143,11 @@ class Jawali extends PaymentGateway
                     "signonDetail" => [
                         "clientID" => "WeCash",
                         "orgID" => $this->getOrgId(),
-                        "userID" => $this->getUserId(),
+                        "userID" => (string) $this->getUserId(),
                         "externalUser" => "user1",
                     ],
                     "messageContext" => [
-                        "clientDate" => $this->getTimestampInMs(),
+                        "clientDate" => (int) $this->getTimestampInMs(),
                         "bodyType" => "Clear",
                     ],
                 ],
@@ -158,7 +158,7 @@ class Jawali extends PaymentGateway
                     "voucher" => $this->getVoucher(),
                     "receiverMobile" => $this->getReceiverPhone(),
                     "purpose" => $this->getPurpose(),
-                    "refId" => $this->getRefId(),
+                    "refId" => (string) $this->getRefId(),
                 ],
             ];
 
