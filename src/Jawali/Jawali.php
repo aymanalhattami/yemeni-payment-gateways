@@ -95,10 +95,25 @@ class Jawali extends PaymentGateway
             if ($this->response->failed()) {
                 throw new Exception($this->response->object()?->error_description);
             } else {
-                $this->unifiedResponse
-                    ->status(Status::Success->value)
-                    ->success(true)
-                    ->data($this->response->json());
+                if($this->response->object()->responseStatus->systemStatus == -1) {
+                    $this->unifiedResponse
+                        ->status(Status::Failed->value)
+                        ->success(false)
+                        ->message($this->response->object()->responseStatus->systemStatusDesc)
+                        ->data($this->response->json());
+                } elseif($this->response->object()->responseStatus->systemStatus == 0) {
+                    $this->unifiedResponse
+                        ->status(Status::Success->value)
+                        ->success(true)
+                        ->message($this->response->object()->responseStatus->systemStatusDesc)
+                        ->data($this->response->json());
+                } else {
+                    $this->unifiedResponse
+                        ->status(Status::Unknown->value)
+                        ->success(false)
+                        ->message($this->response->object()->responseStatus->systemStatusDesc)
+                        ->data($this->response->json());
+                }
             }
         } catch (Exception $e) {
             $this->unifiedResponse
