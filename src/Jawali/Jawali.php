@@ -194,7 +194,7 @@ class Jawali extends PaymentGateway
                 ->status(Status::Failed->value)
                 ->success(false)
                 ->message($e->getMessage())
-                ->data($this->response->json());
+                ->data($this->response->json() ?? []);
         }
 
         return $this;
