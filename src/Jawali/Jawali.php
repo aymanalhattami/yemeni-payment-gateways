@@ -25,21 +25,123 @@ class Jawali extends PaymentGateway
         return $url . '/';
     }
 
-    private function getUsername(): string
-    {
-        return config('yemeni-payment-gateways.jawali.user_id');
-    }
-
     private function getPassword(): string
     {
         return config('yemeni-payment-gateways.jawali.password');
+    }
+
+    private function getOrgId(): string|int
+    {
+        return config('yemeni-payment-gateways.jawali.org_id');
+    }
+
+    private function getUserId(): string
+    {
+        return (string) config('yemeni-payment-gateways.jawali.user_id');
+    }
+
+    private function getTimestampInMs(): int
+    {
+        return (int) Carbon::now()->getTimestampMs();
+    }
+
+    private function getAgentWallet(): string|int
+    {
+        return config('yemeni-payment-gateways.jawali.agent_wallet');
+    }
+
+    private function getAgentWalletPassword(): string|int
+    {
+        return config('yemeni-payment-gateways.jawali.agent_wallet_pwd');
+    }
+
+    private function getLoginToken(): string|int
+    {
+        return config('yemeni-payment-gateways.jawali.login_token');
+    }
+
+    private function getWalletToken(): string|int
+    {
+        return config('yemeni-payment-gateways.jawali.wallet_token');
+    }
+
+    public function voucher(string|int $voucher): static
+    {
+        $this->voucher = $voucher;
+
+        return $this;
+    }
+
+    private function getVoucher(): string|int
+    {
+        return $this->voucher;
+    }
+
+    public function receiverPhone(string|int $receiverPhone): static
+    {
+        $this->receiverPhone = $receiverPhone;
+
+        return $this;
+    }
+
+    private function getReceiverPhone(): string|int
+    {
+        return $this->receiverPhone;
+    }
+
+    public function purpose(string $purpose): static
+    {
+        $this->purpose = $purpose;
+
+        return $this;
+    }
+
+    private function getPurpose(): string|int
+    {
+        return $this->purpose;
+    }
+
+    public function refId(string|int $refId): static
+    {
+        $this->refId = $refId;
+
+        return $this;
+    }
+
+    private function getRefId(): string
+    {
+        return (string) $this->refId;
+    }
+
+    public function amount(int|float $amount): static
+    {
+        $this->amount = $amount;
+
+        return $this;
+    }
+
+    private function getAmount():string
+    {
+        return (string) $this->amount;
+    }
+
+    public function currency($currency): static
+    {
+        $this->currency = $currency;
+
+        return $this;
+    }
+
+    private function getCurrency(): string
+    {
+        return $this->currency;
     }
 
     public function login(): static
     {
         try {
             $this->response = Http::asForm()->post($this->getBaseUrl() . 'paygate/oauth/token', [
-                'username' => $this->getUsername(),
+                'username' => $this->getUserId(),
                 'password' => $this->getPassword(),
                 'grant_type' => 'password',
                 'client_id' => 'restapp',
@@ -360,112 +462,5 @@ class Jawali extends PaymentGateway
         EnvEditor::make()->set('JAWALI_REFRESH_TOKEN', $this->getResponse()->object()?->refresh_token);
 
         return $this;
-    }
-
-    private function getOrgId(): string|int
-    {
-        return config('yemeni-payment-gateways.jawali.org_id');
-    }
-
-    private function getUserId(): string
-    {
-        return (string) config('yemeni-payment-gateways.jawali.user_id');
-    }
-
-    private function getTimestampInMs(): int
-    {
-        return (int) Carbon::now()->getTimestampMs();
-    }
-
-    private function getAgentWallet(): string|int
-    {
-        return config('yemeni-payment-gateways.jawali.agent_wallet');
-    }
-
-    private function getAgentWalletPassword(): string|int
-    {
-        return config('yemeni-payment-gateways.jawali.agent_wallet_pwd');
-    }
-
-    private function getLoginToken(): string|int
-    {
-        return config('yemeni-payment-gateways.jawali.login_token');
-    }
-
-    private function getWalletToken(): string|int
-    {
-        return config('yemeni-payment-gateways.jawali.wallet_token');
-    }
-
-    public function voucher(string|int $voucher): static
-    {
-        $this->voucher = $voucher;
-
-        return $this;
-    }
-
-    private function getVoucher(): string|int
-    {
-        return $this->voucher;
-    }
-
-    public function receiverPhone(string|int $receiverPhone): static
-    {
-        $this->receiverPhone = $receiverPhone;
-
-        return $this;
-    }
-
-    private function getReceiverPhone(): string|int
-    {
-        return $this->receiverPhone;
-    }
-
-    public function purpose(string $purpose): static
-    {
-        $this->purpose = $purpose;
-
-        return $this;
-    }
-
-    private function getPurpose(): string|int
-    {
-        return $this->purpose;
-    }
-
-    public function refId(string|int $refId): static
-    {
-        $this->refId = $refId;
-
-        return $this;
-    }
-
-    private function getRefId(): string
-    {
-        return (string) $this->refId;
-    }
-
-    public function amount(int|float $amount): static
-    {
-        $this->amount = $amount;
-
-        return $this;
-    }
-
-    private function getAmount():string
-    {
-        return (string) $this->amount;
-    }
-
-    public function currency($currency): static
-    {
-        $this->currency = $currency;
-
-        return $this;
-    }
-
-    private function getCurrency(): string
-    {
-        return $this->currency;
     }
 }
