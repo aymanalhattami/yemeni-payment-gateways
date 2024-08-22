@@ -344,16 +344,18 @@ class Floosak extends PaymentGateway
 
     public function storeVerifyRequestIdToEnv(): static
     {
-        EnvEditor::make()
-            ->set('FLOOSAK_VERIFY_REQUEST_ID', $this->getResponse()->object()?->request_id);
+        if($this->getResponse()->successful()) {
+            EnvEditor::make()->set('FLOOSAK_VERIFY_REQUEST_ID', $this->getResponse()->object()?->request_id);
+        }
 
         return $this;
     }
 
     public function storeVerifiedKeyToEnv(): static
     {
-        EnvEditor::make()
-            ->set('FLOOSAK_KEY', $this->getResponse()->object()?->key);
+        if($this->getResponse()->successful()) {
+            EnvEditor::make()->set('FLOOSAK_KEY', $this->getResponse()->object()?->key);
+        }
 
         return $this;
     }
